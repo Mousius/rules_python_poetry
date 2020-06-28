@@ -1,0 +1,17 @@
+def _poetry_export_impl(repository_ctx):
+    repository_ctx.file("BUILD", "")
+    repository_ctx.execute(
+        [
+            "poetry",
+            "export",
+            "-f", "requirements.txt",
+            "-o",
+            repository_ctx.path("requirements.txt")
+        ], 
+        quiet=False,
+        working_directory="{poetry}"
+    )
+
+poetry_export = repository_rule(
+    implementation = _poetry_export_impl
+)

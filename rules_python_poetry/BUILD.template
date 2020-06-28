@@ -1,0 +1,25 @@
+load("@rules_python//python:defs.bzl", "py_runtime", "py_runtime_pair")
+interpreter_path = "{venv}/bin/python"
+
+constraint_value(
+    name = "python3",
+    constraint_setting = "@bazel_tools//tools/python:py3_interpreter_path",
+)
+
+py_runtime(
+    name = "poetry_runtime",
+    interpreter_path = interpreter_path,
+    python_version = "PY3"
+)
+
+py_runtime_pair(
+    name = "poetry_runtime_pair",
+    py3_runtime = ":poetry_runtime",
+    visibility = ["//visibility:public"],
+)
+
+toolchain(
+    name = "poetry_toolchain",
+    toolchain = ":poetry_runtime_pair",
+    toolchain_type = "@bazel_tools//tools/python:toolchain_type",
+)
