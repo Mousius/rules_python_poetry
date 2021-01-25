@@ -2,7 +2,7 @@
 These rules are designed to allow you to easily use the [Poetry Package Manager](https://python-poetry.org/) with [Bazel](https://bazel.build/). It does this whilst still allowing you to use Poetry as usual with `poetry add` and `poetry run`.
 
 ## Getting started
-To illustrate how to use this package, there's an [example project](./example) included which shows all the relevant wiring. 
+To illustrate how to use this package, there's an [example project](./example) included which shows all the relevant wiring.
 
 ## Poetry Setup
 In order to smoothen out the interactions between Bazel and Poetry, we use the common Python location of `.venv` for the Virtual Environment. This makes it easier for both tools to find it, this is configured using [the `virtualenvs.in-project` configuration with Poetry](https://python-poetry.org/docs/configuration/#virtualenvsin-project-boolean):
@@ -63,25 +63,19 @@ poetry_export(
 )
 ```
 
-Which can then be used to interact with [the standard `rules_python`](https://github.com/bazelbuild/rules_python) (take note of the `python_interpreter` passed to `pip_import` here to use the virtual env one):
+Which can then be used to interact with [the standard `rules_python`](https://github.com/bazelbuild/rules_python) (take note of the `python_interpreter` passed to `pip_install` here to use the virtual env one):
 
 ```py
 http_archive(
     name = "rules_python",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.0.2/rules_python-0.0.2.tar.gz",
-    strip_prefix = "rules_python-0.0.2",
-    sha256 = "b5668cde8bb6e3515057ef465a35ad712214962f0b3a314e551204266c7be90c",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz",
+    sha256 = "b6d46438523a3ec0f3cead544190ee13223a52f6a6765a29eae7b7cc24cc83a0",
 )
-load("@rules_python//python:repositories.bzl", "py_repositories")
-py_repositories()
-load("@rules_python//python:pip.bzl", "pip_repositories", "pip_import")
-pip_repositories()
 
-pip_import(
+load("@rules_python//python:pip.bzl", "pip_install")
+pip_install(
     name = "basic_project_pip",
     requirements = "@poetry_requirements//:requirements.txt",
     python_interpreter = interpreter_path
 )
-load("@basic_project_pip//:requirements.bzl", "pip_install")
-pip_install()
 ```
